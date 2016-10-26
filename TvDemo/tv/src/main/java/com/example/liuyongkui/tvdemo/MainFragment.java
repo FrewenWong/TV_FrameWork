@@ -14,12 +14,6 @@
 
 package com.example.liuyongkui.tvdemo;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -51,6 +45,12 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";
 
@@ -71,7 +71,7 @@ public class MainFragment extends BrowseFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.i(TAG, "onCreate");
+        Log.i(TAG, "Msg:onActivityCreated() Called");
         super.onActivityCreated(savedInstanceState);
 
         prepareBackgroundManager();
@@ -92,14 +92,17 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
+    /**
+     * 加载行数据
+     */
     private void loadRows() {
         List<Movie> list = MovieList.setupMovies();
-
+        //数组数据适配器
         mRowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
+
         CardPresenter cardPresenter = new CardPresenter();
 
-        int i;
-        for (i = 0; i < NUM_ROWS; i++) {
+        for (int i = 0; i < NUM_ROWS; i++) {
             if (i != 0) {
                 Collections.shuffle(list);
             }
@@ -108,10 +111,12 @@ public class MainFragment extends BrowseFragment {
                 listRowAdapter.add(list.get(j % 5));
             }
             HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
+
+            //添加左侧导航栏的ListRow到列表选项中
             mRowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 
-        HeaderItem gridHeader = new HeaderItem(i, "设置");
+        HeaderItem gridHeader = new HeaderItem(NUM_ROWS, "设置");
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
@@ -129,7 +134,7 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void prepareBackgroundManager() {
-
+        //后台控制组件
         mBackgroundManager = BackgroundManager.getInstance(getActivity());
         mBackgroundManager.attach(getActivity().getWindow());
         mDefaultBackground = getResources().getDrawable(R.drawable.default_background);
@@ -137,6 +142,9 @@ public class MainFragment extends BrowseFragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
     }
 
+    /**
+     * 初始化UI组件
+     */
     private void setupUIElements() {
         // setBadgeDrawable(getActivity().getResources().getDrawable(
         // R.drawable.videos_by_google_banner));
@@ -213,7 +221,7 @@ public class MainFragment extends BrowseFragment {
                     startActivity(intent);
                     //myView.invalidate();
                 } else {
-                   // myView.requestLayout();
+                    // myView.requestLayout();
                     Toast.makeText(getActivity(), ((String) item), Toast.LENGTH_SHORT)
                             .show();
                 }
@@ -249,6 +257,9 @@ public class MainFragment extends BrowseFragment {
         }
     }
 
+    /**
+     * 设置左侧标题栏的内容填充
+     */
     private class GridItemPresenter extends Presenter {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
